@@ -1,7 +1,9 @@
+# escape=`
+
 default: docker_build
 
 DOCKER_IMAGE ?= campbelldgunn/k8s-helm-win
-GIT_BRANCH ?= `git rev-parse --abbrev-ref HEAD`
+GIT_BRANCH ?= 'git rev-parse --abbrev-ref HEAD'
 
 ifeq ($(GIT_BRANCH), master)
 	DOCKER_TAG = latest
@@ -11,8 +13,8 @@ endif
 
 docker_build:
 	docker build \
-	  --build-arg VCS_REF=`git rev-parse --short HEAD` \
-	  --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+	  --build-arg VCS_REF="git rev-parse --short HEAD" \
+	  --build-arg BUILD_DATE="date -u +"%Y-%m-%dT%H:%M:%SZ"" \
 	  -t $(DOCKER_IMAGE):$(DOCKER_TAG) .
 	  
 docker_push:
