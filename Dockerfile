@@ -1,33 +1,31 @@
 # escape=`
 
 # Build off .NET Core nanoserver container
-# FROM microsoft/nanoserver:latest
 FROM microsoft/windowsservercore:latest
 
 LABEL maintainer="Campbell Gunn <campbelldgunn@gmail.com>" `
-      org.label-schema.schema-version="1.0.0" `
+      org.label-schema.schema-version="v2.7.2" `
       org.label-schema.name="Windows Helm Client"
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
-ENV HELM_LATEST_VERSION="v2.7.2" `
-HELM_PATH="C:\Program Files\windows-amd64"
+ENV HELM_LATEST_VERSION="v2.7.2" 
 
 RUN Invoke-WebRequest -UseBasicParsing https://chocolatey.org/install.ps1 | Invoke-Expression; `
     choco install -y 7zip.install
 
-# RUN wget http://storage.googleapis.com/kubernetes-helm/helm-${HELM_LATEST_VERSION}-windows-amd64.tar.gz
-RUN Invoke-WebRequest http://storage.googleapis.com/kubernetes-helm/helm-v2.7.2-windows-amd64.tar.gz -OutFile helm-v2.7.2-windows-amd64.tar.gz 
+RUN Invoke-WebRequest ""http://storage.googleapis.com/kubernetes-helm/helm-$env:HELM_LATEST_VERSION-windows-amd64.tar.gz"" ""-OutFile helm-$env:HELM_LATEST_VERSION-windows-amd64.tar.gz""
 
-RUN 7z x .\helm-v2.7.2-windows-amd64.tar.gz; `
-7z x .\helm-v2.7.2-windows-amd64.tar
+RUN 7z x "".\helm-$env:HELM_LATEST_VERSION-windows-amd64.tar.gz;"" `
+7z x "".\helm-$env:HELM_LATEST_VERSION-windows-amd64.tar""
 
 RUN mv windows-amd64 '\Program Files\'
+RUN rm "".\helm-$env:HELM_LATEST_VERSION-windows-amd64.tar.gz;"" `
+rm "".\helm-$env:HELM_LATEST_VERSION-windows-amd64.tar"" 
 
-# RUN $env:PATH = $env:PATH + ';' + $HELM_PATH
+COPY Set-PathVariable.ps1 .\Set-PathVariable.ps1
 
-RUN rm .\helm-v2.7.2-windows-amd64.tar.gz; `
-rm .\helm-v2.7.2-windows-amd64.tar 
+RUN .\Set-PathVariable.ps1 -NewLocation 'C:\Program Files\windows-amd64'
 
-# ENTRYPOINT ["helm"]
-# CMD ["help"]
+ENTRYPOINT powershell 'helm.exe'
+# CMD '--help'
