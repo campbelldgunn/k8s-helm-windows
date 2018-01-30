@@ -4,12 +4,12 @@
 FROM microsoft/windowsservercore:latest
 
 LABEL maintainer="Campbell Gunn <campbelldgunn@gmail.com>" `
-      org.label-schema.schema-version="v2.7.2" `
+      org.label-schema.schema-version="v2.8.0" `
       org.label-schema.name="Windows Helm Client"
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
-ENV HELM_LATEST_VERSION="v2.7.2" 
+ENV HELM_LATEST_VERSION="v2.8.0" 
 
 RUN Invoke-WebRequest -UseBasicParsing https://chocolatey.org/install.ps1 | Invoke-Expression; `
     choco install -y 7zip.install
