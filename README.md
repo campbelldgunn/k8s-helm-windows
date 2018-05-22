@@ -12,6 +12,12 @@
 ## Overview
 This container provides the Helm client for use with Kubernetes
 
+## Building
+To build a image use the following command: `docker build -t campbelldgunn/k8s-helm-win`
+
+## Verifying
+to verfiy that the image built and executes, use the following command: `docker run campbelldgunn/k8s-helm-win version`
+
 ## Run with tunneling
 `kubectl run -it helm --env=HELM_HOST=<HOST>:<PORT> --image=campbelldgunn/k8s-helm --command /bin/sh -n kube-system --rm=true`
 
